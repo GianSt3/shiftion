@@ -1,0 +1,40 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "appTitle": "My App",
+  "@appTitle": {
+    "description": "The title of the app"
+  },
+  "dashboard": "Dashboard",
+  "staff": "Staff",
+  "schedule": "Schedule",
+  "people_employee": "{count, plural, =0{No employees} =1{1 employee} other{{count} employees}}",
+  "@people_employee": {
+    "description": "Number of employees",
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "people_intern": "{count, plural, =0{No interns} =1{1 intern} other{{count} interns}}",
+  "@people_intern": {
+    "description": "Number of interns",
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "people_freelancer": "{count, plural, =0{No freelancers} =1{1 freelancer} other{{count} freelancers}}",
+  "@people_freelancer": {
+    "description": "Number of freelancers",
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  }
+}
