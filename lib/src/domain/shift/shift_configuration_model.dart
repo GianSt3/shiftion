@@ -35,6 +35,22 @@ class ShiftConfigurationModel {
     };
   }
 
+  ShiftConfigurationModel copyWith({
+    int? id,
+    String? name,
+    String? startTime,
+    String? endTime,
+    bool? isOvernight,
+  }) {
+    return ShiftConfigurationModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      isOvernight: isOvernight ?? this.isOvernight,
+    );
+  }
+
   factory ShiftConfigurationModel.fromMap(Map<String, dynamic> map) {
     return ShiftConfigurationModel(
       id: map['id'] as int?,

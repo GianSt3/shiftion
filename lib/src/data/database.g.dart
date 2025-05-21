@@ -290,6 +290,17 @@ class _$ShiftConfigurationDao extends ShiftConfigurationDao {
                   'startTime': item.startTime,
                   'endTime': item.endTime,
                   'isOvernight': item.isOvernight ? 1 : 0
+                }),
+        _shiftConfigurationEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'shift_configurations',
+            ['id'],
+            (ShiftConfigurationEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'startTime': item.startTime,
+                  'endTime': item.endTime,
+                  'isOvernight': item.isOvernight ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -300,6 +311,9 @@ class _$ShiftConfigurationDao extends ShiftConfigurationDao {
 
   final InsertionAdapter<ShiftConfigurationEntity>
       _shiftConfigurationEntityInsertionAdapter;
+
+  final UpdateAdapter<ShiftConfigurationEntity>
+      _shiftConfigurationEntityUpdateAdapter;
 
   @override
   Future<List<ShiftConfigurationEntity>> findAllConfigurations() async {
@@ -320,9 +334,29 @@ class _$ShiftConfigurationDao extends ShiftConfigurationDao {
   }
 
   @override
+  Future<ShiftConfigurationEntity?> getConfigurationById(int id) async {
+    return _queryAdapter.query(
+        'SELECT * FROM shift_configurations WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => ShiftConfigurationEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            startTime: row['startTime'] as String,
+            endTime: row['endTime'] as String,
+            isOvernight: (row['isOvernight'] as int) != 0),
+        arguments: [id]);
+  }
+
+  @override
   Future<void> insertConfiguration(
       ShiftConfigurationEntity configuration) async {
     await _shiftConfigurationEntityInsertionAdapter.insert(
+        configuration, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateConfiguration(
+      ShiftConfigurationEntity configuration) async {
+    await _shiftConfigurationEntityUpdateAdapter.update(
         configuration, OnConflictStrategy.replace);
   }
 }

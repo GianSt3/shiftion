@@ -40,16 +40,6 @@ ThemeData windowsTheme() {
 
     textTheme: GoogleFonts.robotoTextTheme(),
 
-    cardTheme: CardTheme(
-      color: Colors.white,
-      margin: const EdgeInsets.all(8.0),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-        side: const BorderSide(color: Color(0xFFE5E5E5)),
-      ),
-    ),
-
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.white,

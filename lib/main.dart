@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'l10n/app_localizations.dart';
 import 'src/core/di/injection.dart';
 import 'src/data/person_dao.dart';
 import 'src/data/shift_configuration_dao.dart';

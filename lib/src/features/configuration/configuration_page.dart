@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/di/injection.dart';
+import '../../data/shift_configuration_dao.dart';
 import '../../domain/shift/shift_configuration_model.dart';
 import 'bloc/shift_configuration_cubit.dart';
+import 'detail/bloc/configuration_detail_cubit.dart';
+import 'detail/configuration_detail_page.dart';
 
 class ConfigurationPage extends StatefulWidget {
   const ConfigurationPage({super.key});
@@ -164,6 +168,23 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                       itemBuilder: (context, index) {
                         final configuration = configurations[index];
                         return ListTile(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (context) => ConfigurationDetailCubit(
+                                    configurationDao:
+                                        getIt<ShiftConfigurationDao>(),
+                                  )..fetchConfiguration(configuration.id!),
+                                  child: ConfigurationDetailPage(),
+                                ),
+                              ),
+                            );
+                            context
+                                .read<ShiftConfigurationCubit>()
+                                .loadShiftConfigurations();
+                          },
                           title: Text(
                             configuration.name,
                             style: GoogleFonts.roboto(),

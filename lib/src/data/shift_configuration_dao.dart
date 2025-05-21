@@ -12,4 +12,10 @@ abstract class ShiftConfigurationDao {
 
   @Query('DELETE FROM shift_configurations WHERE id = :id')
   Future<void> deleteConfiguration(int id);
+
+  @Query('SELECT * FROM shift_configurations WHERE id = :id')
+  Future<ShiftConfigurationEntity?> getConfigurationById(int id);
+
+  @Update(onConflict: OnConflictStrategy.replace)
+  Future<void> updateConfiguration(ShiftConfigurationEntity configuration);
 }
