@@ -8,6 +8,7 @@ import '../../domain/shift/shift_configuration_model.dart';
 import 'bloc/shift_configuration_cubit.dart';
 import 'detail/bloc/configuration_detail_cubit.dart';
 import 'detail/configuration_detail_page.dart';
+import 'form/configuration_form.dart';
 
 class ConfigurationPage extends StatefulWidget {
   const ConfigurationPage({super.key});
@@ -17,12 +18,6 @@ class ConfigurationPage extends StatefulWidget {
 }
 
 class _ConfigurationPageState extends State<ConfigurationPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _startTimeController = TextEditingController();
-  final _endTimeController = TextEditingController();
-  bool _isOvernight = false;
-
   @override
   void initState() {
     super.initState();
@@ -31,22 +26,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _startTimeController.dispose();
-    _endTimeController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectTime(
-      BuildContext context, TextEditingController controller) async {
-    final timeOfDay = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (timeOfDay != null) {
-      final formattedTime = timeOfDay.format(context);
-      controller.text = formattedTime;
-    }
   }
 
   @override
@@ -61,97 +41,23 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 16),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 400,
-                      child: TextFormField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Configuration Name',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Name is required";
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    SizedBox(
-                      width: 100,
-                      child: TextFormField(
-                        controller: _startTimeController,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Start Time',
-                          border: OutlineInputBorder(),
-                        ),
-                        onTap: () => _selectTime(context, _startTimeController),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    SizedBox(
-                      width: 100,
-                      child: TextFormField(
-                        controller: _endTimeController,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          labelText: 'End Time',
-                          border: OutlineInputBorder(),
-                        ),
-                        onTap: () => _selectTime(context, _endTimeController),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _isOvernight,
-                          onChanged: (value) {
-                            setState(() {
-                              _isOvernight = value ?? false;
-                            });
-                          },
-                        ),
-                        const Text('Is Overnight'),
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          final configuration = ShiftConfigurationModel(
-                            name: _nameController.text,
-                            startTime: _startTimeController.text,
-                            endTime: _endTimeController.text,
-                            isOvernight: _isOvernight,
-                          );
+          ConfigurationForm(onSubmit: ({
+            required String name,
+            required String startTime,
+            required String endTime,
+            required bool isOvernight,
+          }) {
+            final configuration = ShiftConfigurationModel(
+              name: name,
+              startTime: startTime,
+              endTime: endTime,
+              isOvernight: isOvernight,
+            );
 
-                          context
-                              .read<ShiftConfigurationCubit>()
-                              .addShiftConfiguration(configuration);
-                          _nameController.clear();
-                          _startTimeController.clear();
-                          _endTimeController.clear();
-                          setState(() {
-                            _isOvernight = false;
-                          });
-                        }
-                      },
-                      child: const Text("Add"),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+            context
+                .read<ShiftConfigurationCubit>()
+                .addShiftConfiguration(configuration);
+          }),
           const SizedBox(height: 24),
           const Divider(),
           Expanded(
